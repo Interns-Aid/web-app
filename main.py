@@ -1,6 +1,5 @@
 from common.app_initialization import create_app
 
-
 app = create_app()
 
 
