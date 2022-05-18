@@ -1,0 +1,29 @@
+services:
+  web:
+    container_name: interns_aid_web
+    restart: always
+    build: .
+    command: flask run -h 0.0.0.0 -p 8000
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    environment:
+      FLASK_APP: app.py
+    depends_on:
+      - db
+  db:
+    container_name: interns_aid_web_mongo
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: "root"
+      MONGO_INITDB_ROOT_PASSWORD: "root"
+      MONGO_INITDB_DATABASE: "location"
+    volumes:
+      - mongo-data:/data/db
+    ports:
+      - 27017:27017
+volumes:
+  mongo-data:
+
