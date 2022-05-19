@@ -1,6 +1,4 @@
-from common.app_initialization import create_app
-
-app = create_app()
+from common.app_initialization import app
 
 
 @app.get("/")
