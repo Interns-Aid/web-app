@@ -8,6 +8,7 @@ class V2Resource(Resource):
         return {"version2": "v2"}
 
 
-v2 = Blueprint("v2", import_name="v2", url_prefix="/api/v2")
+v2 = Blueprint("v2", import_name=__name__)
 api_v2 = Api(v2)
+
 api_v2.add_resource(V2Resource, "/")
