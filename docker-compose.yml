@@ -3,23 +3,21 @@ services:
     container_name: interns_aid_web
     restart: always
     build: .
-    command: flask run -h 0.0.0.0 -p 8000
+    command: gunicorn app:app -w 2 --threads 2 -b 0.0.0.0:8000 --reload
     volumes:
-      - .:/app
+      - .:/app/
     ports:
       - "8000:8000"
-    environment:
-      FLASK_APP: app.py
+    env_file:
+      - .env
     depends_on:
       - db
   db:
-    container_name: interns_aid_web_mongo
+    container_name: mongo
     image: mongo
     restart: always
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: "root"
-      MONGO_INITDB_ROOT_PASSWORD: "root"
-      MONGO_INITDB_DATABASE: "location"
+    env_file:
+      - .env
     volumes:
       - mongo-data:/data/db
     ports:
