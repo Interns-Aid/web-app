@@ -9,14 +9,6 @@ from database import db
 def create_app():
     app = Flask(__name__)
     app.config['MONGODB_HOST'] = os.environ.get("URI")
-    # app.config['MONGODB_SETTINGS'] = {
-    #     'host': f"mongodb://"
-    #             f"{os.environ.get('DB_USER')}"
-    #             f":{os.environ.get('DB_PASSWORD')}"
-    #             f"@{os.environ.get('DB_HOST')}"
-    #             f":{os.environ.get('DB_PORT')}"
-    #             f"/{os.environ.get('DB_NAME')}?authSource=admin"
-    # }
     db.init_app(app)
     return app
 
