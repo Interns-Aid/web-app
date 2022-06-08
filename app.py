@@ -8,15 +8,15 @@ from database import db
 
 def create_app():
     app = Flask(__name__)
-    print(os.environ.get(''))
-    app.config['MONGODB_SETTINGS'] = {
-        'host': f"mongodb://"
-                f"{os.environ.get('DB_USER')}"
-                f":{os.environ.get('DB_PASSWORD')}"
-                f"@{os.environ.get('DB_HOST')}"
-                f":{os.environ.get('DB_PORT')}"
-                f"/{os.environ.get('DB_NAME')}?authSource=admin"
-    }
+    app.config['MONGODB_HOST'] = os.environ.get("URI")
+    # app.config['MONGODB_SETTINGS'] = {
+    #     'host': f"mongodb://"
+    #             f"{os.environ.get('DB_USER')}"
+    #             f":{os.environ.get('DB_PASSWORD')}"
+    #             f"@{os.environ.get('DB_HOST')}"
+    #             f":{os.environ.get('DB_PORT')}"
+    #             f"/{os.environ.get('DB_NAME')}?authSource=admin"
+    # }
     db.init_app(app)
     return app
 
@@ -26,7 +26,7 @@ app = create_app()
 
 @app.get("/")
 def home():
-    return {"hello": "world"}
+    return {"hello": os.environ.get("URI")}
 
 
 class User(Document):
@@ -36,11 +36,27 @@ class User(Document):
     email = EmailField(required=True)
 
 
+class Question(Document):
+    title = StringField(required=True)
+
+
 @app.post("/users")
 def create_user():
     user = User(first_name="Rajesh", middle_name="Kumar", last_name="Khadka", email="rajesh-kumar.khadka@epita.fr")
     user.save()
     return {"success": True}
+
+
+@app.post("/questions")
+def create_question():
+    question = Question(title="new questions")
+    question.save()
+    return {"success": True}
+
+
+@app.get("/questions")
+def list_question():
+    return Question.objects.to_json()
 
 
 @app.get("/users")
