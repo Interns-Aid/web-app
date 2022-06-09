@@ -4,12 +4,14 @@ from flask import Flask
 from mongoengine import *
 
 from database import db
+from v1 import v1_bp
 
 
 def create_app():
     app = Flask(__name__)
     app.config['MONGODB_HOST'] = os.environ.get("URI")
     db.init_app(app)
+    app.register_blueprint(v1_bp, url_prefix="/api/v1")
     return app
 
 
