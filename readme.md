@@ -5,6 +5,6 @@ docker-compose up -d
 ```
 #### Mongo DB
 ```shell
-docker exec -it mongo shell
+docker exec -it mongo bash
 mongo admin -u root -p 'root'
 ```
