@@ -2,3 +2,5 @@ gunicorn
 flask
 flask-mongoengine
 flask-restful
+marshmallow-mongoengine
+pydevd-pycharm~=221.5080.212
