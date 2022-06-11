@@ -3,7 +3,7 @@ services:
     container_name: interns_aid_web
     restart: always
     build: .
-    command: gunicorn app:app -w 2 --threads 2 -b 0.0.0.0:8000 --reload
+    command: gunicorn app:app -b 0.0.0.0:8000 --reload
     volumes:
       - .:/app/
     ports:
