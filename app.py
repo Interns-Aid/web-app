@@ -22,4 +22,4 @@ app = create_app()
 
 @app.get("/")
 def home():
-    return {"hello": "world"}
+    return {"hello": "world-build-check"}
