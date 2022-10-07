@@ -1,9 +1,7 @@
-import mongoengine as me
+from core.extensions import db
 
 
-class User(me.Document):
-    first_name = me.StringField(required=True)
-    middle_name = me.StringField(required=True)
-    last_name = me.StringField(required=True)
-    email = me.EmailField(required=True)
-    role = me.StringField(required=True)
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String, unique=True, nullable=False)
+    email = db.Column(db.String)

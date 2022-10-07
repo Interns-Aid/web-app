@@ -1,6 +1,11 @@
 gunicorn
 flask
-flask-mongoengine
 flask-restful
-marshmallow-mongoengine
+Flask-SQLAlchemy
+marshmallow-sqlalchemy
+python-dotenv
+psycopg2-binary
+pytest
 pydevd-pycharm~=221.5080.212
+flask-marshmallow
+Flask-Migrate

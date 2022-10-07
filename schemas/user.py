@@ -1,8 +1,10 @@
-from marshmallow_mongoengine import ModelSchema
+from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 
 from models.user import User
 
 
-class UserSchema(ModelSchema):
+class UserSchema(SQLAlchemyAutoSchema):
     class Meta:
         model = User
+        load_instance = True
+        transient = True
