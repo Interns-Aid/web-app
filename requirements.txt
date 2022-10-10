@@ -9,3 +9,5 @@ pytest
 pydevd-pycharm~=221.5080.212
 flask-marshmallow
 Flask-Migrate
+flask-jwt-extended
+flask-admin
