@@ -5,7 +5,9 @@ from marshmallow import ValidationError
 from werkzeug.exceptions import HTTPException, InternalServerError
 
 APP_ERRORS = {
-    'DUPLICATE_USER': ('User already exist with given username', 400)
+    'DUPLICATE_USER': ('User already exist with given username', 400),
+    'INVALID_CREDENTIALS': ('Username/Password does not match', 401),
+    'INACTIVE_USER': ('User has been disabled', 401)
 }
 
 bp = Blueprint('errors', __name__)
@@ -29,7 +31,7 @@ def parse_response(e):
     response.data = json.dumps({
         "code": e.code,
         "name": e.name,
-        "description": e.messages,
+        "description": e.description,
     })
     response.content_type = "application/json"
     return response

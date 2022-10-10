@@ -1,4 +1,5 @@
 import os
+from datetime import timedelta
 
 
 class Config(object):
@@ -20,6 +21,14 @@ class Config(object):
     def SECRET_KEY(self):
         return os.environ.get('SECRET_KEY')
 
+    @property
+    def JWT_ACCESS_TOKEN_EXPIRES(self):
+        return timedelta(hours=1)
+
+    @property
+    def JWT_REFRESH_TOKEN_EXPIRES(self):
+        return timedelta(days=30)
+
 
 class ProductionConfig(Config):
     pass
@@ -29,7 +38,7 @@ class DevelopmentConfig(Config):
     DB_SERVER = 'localhost'
 
 
-class TestingConfig(object):
+class TestingConfig(Config):
     DB_SERVER = 'localhost'
     TESTING = True
 
