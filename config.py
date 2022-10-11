@@ -8,6 +8,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_TYPE = os.environ.get('SESSION_TYPE')
     PROPAGATE_EXCEPTIONS = True
+    JWT_TOKEN_LOCATION = ['headers']
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):

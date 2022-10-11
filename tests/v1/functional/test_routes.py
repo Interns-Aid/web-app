@@ -81,3 +81,9 @@ def test_login_inactive_user(client, users):
     assert response.json == {'code': 401,
                              'description': 'Username/Password does not match',
                              'name': 'INVALID_CREDENTIALS'}
+
+
+@pytest.mark.usefixtures('app_ctx')
+def test_refresh_token(authenticated_client):
+    response = authenticated_client.post('/api/v1/refresh')
+    assert response.json.get('access_token') is not None

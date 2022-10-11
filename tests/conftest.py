@@ -1,10 +1,10 @@
 import pytest
 from dotenv import load_dotenv
+from werkzeug.security import generate_password_hash
 
 from app import create_app
 from core.extensions import db
 from models import User
-from schemas.user import UserSchema
 
 
 @pytest.fixture
@@ -29,19 +29,30 @@ def client(app):
     return app.test_client()
 
 
+@pytest.fixture()
+def authenticated_client(app):
+    test_client = app.test_client()
+    response = test_client.post('/api/v1/login', json={'username': 'active_user',
+                                                       'password': 'Mit@1234'})
+    refresh_token = response.json.get('refresh_token')
+    test_client.environ_base['HTTP_AUTHORIZATION'] = f'Bearer {refresh_token}'
+    return test_client
+
+
 @pytest.fixture(autouse=True)
 def users(app):
     with app.app_context():
-        user_schema = UserSchema()
-
         active_user = {'username': 'active_user',
                        'email': 'active_user@mit.com',
                        'password': 'Mit@1234',
                        'first_name': 'active',
                        'last_name': 'user',
                        'active': True}
-        user = user_schema.load(active_user)
+
+        user = User(**active_user)
+        user.password = generate_password_hash(user.password)
         db.session.add(user)
+        db.session.commit()
 
         inactive_user = {'username': 'inactive_user',
                          'email': 'inactive_user@mit.com',
@@ -50,9 +61,9 @@ def users(app):
                          'last_name': 'User',
                          'active': False}
 
-        user = user_schema.load(inactive_user)
+        user = User(**inactive_user)
+        user.password = generate_password_hash(user.password)
         db.session.add(user)
-
         db.session.commit()
 
         yield User.query.all()

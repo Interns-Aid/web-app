@@ -1,5 +1,5 @@
 from flask import request
-from flask_jwt_extended import create_access_token, create_refresh_token
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
 from flask_restful import Resource
 from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash
@@ -40,3 +40,11 @@ class LoginResource(Resource):
         return {'access_token': access_token,
                 'refresh_token': refresh_token,
                 **UserSchema().dump(db_user)}
+
+
+class TokenRefreshResource(Resource):
+    @jwt_required(refresh=True)
+    def post(self):
+        identity = get_jwt_identity()
+        access_token = create_access_token(identity=identity)
+        return {'access_token': access_token}
