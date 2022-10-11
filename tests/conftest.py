@@ -68,3 +68,10 @@ def users(app):
 
         yield User.query.all()
         User.query.delete()
+
+
+@pytest.fixture
+@pytest.mark.usefixtures("app_ctx")
+def active_user():
+    user = User.query.filter_by(active=True).first()
+    yield user

@@ -87,3 +87,24 @@ def test_login_inactive_user(client, users):
 def test_refresh_token(authenticated_client):
     response = authenticated_client.post('/api/v1/refresh')
     assert response.json.get('access_token') is not None
+
+
+@pytest.mark.usefixtures('app_ctx')
+def test_logout(client):
+    response = client.post('/api/v1/login', json={'username': 'active_user',
+                                                  'password': 'Mit@1234'})
+    access_token, refresh_token = response.json.get('access_token'), response.json.get('refresh_token')
+
+    client.environ_base['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+    response = client.post('/api/v1/logout', json={'refresh_token': refresh_token})
+    assert response.json == {"success": True}
+
+    # verify refresh token is revoked or not
+    client.environ_base['HTTP_AUTHORIZATION'] = f'Bearer {refresh_token}'
+    response = client.post('/api/v1/refresh')
+    assert response.json == {'msg': 'Token has been revoked'}
+
+    # verify access token is revoked or not
+    client.environ_base['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
+    response = client.get('/api/v1/profile')
+    assert response.json == {'msg': 'Token has been revoked'}
