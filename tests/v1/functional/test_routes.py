@@ -84,9 +84,39 @@ def test_login_inactive_user(client, users):
 
 
 @pytest.mark.usefixtures('app_ctx')
-def test_refresh_token(authenticated_client):
-    response = authenticated_client.post('/api/v1/refresh')
+def test_refresh_token(token_refresh_client):
+    response = token_refresh_client.post('/api/v1/refresh')
     assert response.json.get('access_token') is not None
+
+
+@pytest.mark.usefixtures('app_ctx')
+def test_user_profile(authenticated_client):
+    response = authenticated_client.get('/api/v1/profile')
+    assert response.status_code == 200
+    assert response.json.get('username') == 'active_user'
+
+
+def test_update_profile(authenticated_client, user, client):
+    updated_password = 'Updated@PW123'
+    updated_first_name = 'updated_first_name'
+    updated_last_name = 'updated_last_name'
+    updated_email = 'updated_email@gmail.com'
+
+    response = authenticated_client.put('/api/v1/profile',
+                                        json={'id': user.get('id'),
+                                              'first_name': updated_first_name,
+                                              'last_name': updated_last_name,
+                                              'email': updated_email,
+                                              'password': updated_password})
+    assert response.status_code == 200
+    assert response.json == {'first_name': updated_first_name,
+                             'last_name': updated_last_name,
+                             'email': updated_email}
+    # login with updated password
+    response = client.post('/api/v1/login', json={'username': 'active_user',
+                                                  'password': updated_password})
+    assert response.status_code == 200
+    assert response.json.get('id') == user.get('id')
 
 
 @pytest.mark.usefixtures('app_ctx')

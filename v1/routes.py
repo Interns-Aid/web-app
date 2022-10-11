@@ -92,3 +92,11 @@ class UserProfile(Resource):
         user = User.query.filter_by(username=get_jwt_identity()).first()
         user_schema = UserSchema()
         return user_schema.dump(user)
+
+    @jwt_required()
+    def put(self):
+        user = User.query.get(request.json.get('id'))
+        user_schema = UserSchema(only=('first_name', 'last_name', 'password', 'email'))
+        user_schema.load(request.json, instance=user, partial=True)
+        db.session.commit()
+        return user_schema.dump(user)
