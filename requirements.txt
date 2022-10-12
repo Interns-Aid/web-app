@@ -1,13 +1,14 @@
 gunicorn
 flask
 flask-restful
-Flask-SQLAlchemy
+Flask-SQLAlchemy==3.0.1
 marshmallow-sqlalchemy
 python-dotenv
-psycopg2-binary
+psycopg2-binary==2.9.4
 pytest
-pydevd-pycharm~=221.5080.212
+pydevd-pycharm==223.6160.21
 flask-marshmallow
 Flask-Migrate
 flask-jwt-extended
 flask-admin
+marshmallow-oneofschema

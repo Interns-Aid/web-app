@@ -1,6 +1,6 @@
 import pytest
 
-from models import User
+from models import User, Internship
 
 
 @pytest.mark.parametrize('body,status_code,data',
@@ -138,3 +138,28 @@ def test_logout(client):
     client.environ_base['HTTP_AUTHORIZATION'] = f'Bearer {access_token}'
     response = client.get('/api/v1/profile')
     assert response.json == {'msg': 'Token has been revoked'}
+
+
+@pytest.mark.parametrize('data,status_code',
+                         [({'assignment': {'duration': '45 minutes',
+                                           'platform': 'CodeSignal',
+                                           'questions': [{'title': 'Find the duplicate elements'},
+                                                         {'title': 'Find the word count'}],
+                                           'title': 'Coding Test',
+                                           'type': 'coding'},
+                            'attachments': [{'url': 'www.internsaid.com/docs_1.pdf'},
+                                            {'url': 'www.internsaid.com/docs_2.pdf'}],
+                            'company': {'location': 'France',
+                                        'name': 'Google',
+                                        'website': 'www.google.com'},
+                            'tags': [{'title': 'python'},
+                                     {'title': 'flask'}],
+                            'title': 'Backend Developer Internship'
+                            }, 200),
+                          ({}, 400)])
+@pytest.mark.usefixtures('app_ctx')
+def test_create_internship(data, status_code, authenticated_client):
+    response = authenticated_client.post('/api/v1/internships', json=data)
+    assert response.status_code == status_code
+    if status_code == 200:
+        assert data.get('title') == Internship.query.filter_by(title=data.get('title')).first().title

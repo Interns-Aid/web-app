@@ -12,6 +12,7 @@ from core.extensions import db, jwt
 from errors import BaseError
 from models import User
 from models.blocked_token import BlockedToken
+from schemas.internship import InternshipSchema
 from schemas.user import UserSchema
 
 
@@ -100,3 +101,13 @@ class UserProfile(Resource):
         user_schema.load(request.json, instance=user, partial=True)
         db.session.commit()
         return user_schema.dump(user)
+
+
+class InternshipResource(Resource):
+    @jwt_required()
+    def post(self):
+        internship_schema = InternshipSchema()
+        internship = internship_schema.load(request.json)
+        db.session.add(internship)
+        db.session.commit()
+        return internship_schema.dump(internship)
