@@ -49,11 +49,11 @@ name: Deploy to Cloud Run from Source
 on:
   push:
     branches: [ $default-branch ]
-CLOUD_RUN_SERVICE
+
 env:
-  PROJECT_ID: '${{ secrets.GCP_PROJECT }}'
-  SERVICE: '${{ secrets.CLOUD_RUN_SERVICE }}'
-  REGION: '${{ secrets.CLOUD_RUN_REGION }}'
+  PROJECT_ID: '${{ secrets.GCP_PROJECT }}' # TODO: update Google Cloud project id
+  SERVICE: '${{ secrets.CLOUD_RUN_SERVICE }}' # TODO: update Cloud Run service name
+  REGION: '${{ secrets.CLOUD_RUN_REGION }}' # TODO: update Cloud Run service region
 
 jobs:
   deploy:
@@ -66,22 +66,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      NOTE: Alternative option - authentication via credentials json
-        - name: Google Auth
-          id: auth
-          uses: 'google-github-actions/auth@v0'
-          with:
-            credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-        - name: Deploy to Cloud Run
-          id: deploy
-          uses: google-github-actions/deploy-cloudrun@v0
-          with:
-            service: ${{ env.SERVICE }}
-            region: ${{ env.REGION }}
-            # NOTE: If required, update to the appropriate source folder
-            source: ./
+      # NOTE: Alternative option - authentication via credentials json
+      - name: Google Auth
+        id: auth
+        uses: 'google-github-actions/auth@v0'
+        with:
+          credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
-        # If required, use the Cloud Run url output in later steps
-        - name: Show Output
-          run: echo ${{ steps.deploy.outputs.url }}
+      - name: Deploy to Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0
+        with:
+          service: ${{ env.SERVICE }}
+          region: ${{ env.REGION }}
+          # NOTE: If required, update to the appropriate source folder
+          source: ./
+
+      # If required, use the Cloud Run url output in later steps
+      - name: Show Output
+        run: echo ${{ steps.deploy.outputs.url }}
