@@ -8,8 +8,8 @@ jobs:
     strategy:
       fail-fast: true
       matrix:
-        os: [ "ubuntu-latest"]
-        python-version: ["3.9" ]
+        os: [ "ubuntu-latest" ]
+        python-version: [ "3.9" ]
 
     steps:
       - name: Checkout source
@@ -27,3 +27,6 @@ jobs:
 
       - name: Run tests
         run: pytest
+
+      - name: "Upload coverage to Codecov"
+        uses: codecov/codecov-action@v1
