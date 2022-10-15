@@ -1,0 +1,7 @@
+[run]
+branch = True
+source = codecov
+omit =
+    appserver.py
+    config.py
+
