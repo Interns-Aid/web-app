@@ -40,5 +40,10 @@ jobs:
           token: ${{ secrets.CODECOV_TOKEN }}
           directory: ./coverage/reports/
           env_vars: OS,PYTHON
+          files: /home/runner/work/web-app/web-app/coverage.xml
           flags: tests
+      - name: See coverage
+        run: |
+            cd /home/runner/work/web-app/web-app/
+            ls
 
