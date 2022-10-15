@@ -25,7 +25,15 @@ jobs:
           flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
           # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-      - name: Test with pytest
-        run: pytest --verbose --color=yes --cov=tests
-      - name: "Upload coverage to Codecov"
-        uses: codecov/codecov-action@v1
+      - name: Generate Report
+        run: |
+          pytest --cov=./ --cov-report=xml
+          codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3.1.0
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/reports/
+          env_vars: OS,PYTHON
+          files: /home/runner/work/SIESTAstepper/SIESTAstepper/coverage.xml
+          flags: tests
