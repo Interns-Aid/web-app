@@ -27,6 +27,23 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Test with pytest
         run: |
-          tox
-      - name: "Upload coverage to Codecov"
-          uses: codecov/codecov-action@v1
+          pytest
+      - name: Generate Report
+        run: |
+          pip install codecov
+          pip install pytest-cov
+          pytest --cov=./ --cov-report=xml
+          codecov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v3.1.1
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          directory: ./coverage/reports/
+          env_vars: OS,PYTHON
+          files: /home/runner/work/web-app/web-app/coverage.xml
+          flags: tests
+      - name: See coverage
+        run: |
+            cd /home/runner/work/web-app/web-app/
+            ls
+

@@ -13,3 +13,4 @@ flask-admin
 marshmallow-oneofschema
 coverage
 pytest-cov
+codecov
