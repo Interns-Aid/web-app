@@ -11,7 +11,7 @@ class CompanySchema(SQLAlchemyAutoSchema):
         model = Company
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
 
 class TagSchema(SQLAlchemyAutoSchema):
@@ -19,7 +19,7 @@ class TagSchema(SQLAlchemyAutoSchema):
         model = Tag
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
 
 class AttachmentSchema(SQLAlchemyAutoSchema):
@@ -27,7 +27,7 @@ class AttachmentSchema(SQLAlchemyAutoSchema):
         model = Attachment
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
 
 class QuestionSchema(SQLAlchemyAutoSchema):
@@ -35,7 +35,7 @@ class QuestionSchema(SQLAlchemyAutoSchema):
         model = Question
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
 
 class CodingSchema(SQLAlchemyAutoSchema):
@@ -45,7 +45,7 @@ class CodingSchema(SQLAlchemyAutoSchema):
         model = Coding
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
 
 class HomeSchema(SQLAlchemyAutoSchema):
@@ -53,7 +53,7 @@ class HomeSchema(SQLAlchemyAutoSchema):
         model = Home
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)
 
 
 class AssignmentSchema(OneOfSchema):
@@ -79,4 +79,4 @@ class InternshipSchema(SQLAlchemyAutoSchema):
         include_relationships = True
         load_instance = True
         transient = True
-        dump_only = ('id',)
+        dump_only = ("id",)

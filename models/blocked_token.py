@@ -9,7 +9,7 @@ class BlockedToken(db.Model):
     jti = db.Column(db.String(36), nullable=False, index=True)
     type = db.Column(db.String(16), nullable=False)
     user_id = db.Column(
-        db.ForeignKey('user.id'),
+        db.ForeignKey("user.id"),
         default=lambda: get_current_user().id,
         nullable=False,
     )

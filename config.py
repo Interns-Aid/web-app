@@ -4,11 +4,11 @@ from datetime import timedelta
 
 class Config(object):
     TESTING = False
-    DB_SERVER = ''
+    DB_SERVER = ""
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SESSION_TYPE = os.environ.get('SESSION_TYPE')
+    SESSION_TYPE = os.environ.get("SESSION_TYPE")
     PROPAGATE_EXCEPTIONS = True
-    JWT_TOKEN_LOCATION = ['headers']
+    JWT_TOKEN_LOCATION = ["headers"]
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
@@ -16,11 +16,11 @@ class Config(object):
 
     @property
     def JWT_SECRET_KEY(self):
-        return os.environ.get('JWT_SECRET_KEY')
+        return os.environ.get("JWT_SECRET_KEY")
 
     @property
     def SECRET_KEY(self):
-        return os.environ.get('SECRET_KEY')
+        return os.environ.get("SECRET_KEY")
 
     @property
     def JWT_ACCESS_TOKEN_EXPIRES(self):
@@ -36,13 +36,13 @@ class ProductionConfig(Config):
 
 
 class DevelopmentConfig(Config):
-    DB_SERVER = 'localhost'
+    DB_SERVER = "localhost"
 
 
 class TestingConfig(Config):
-    DB_SERVER = 'localhost'
+    DB_SERVER = "localhost"
     TESTING = True
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
-        return 'sqlite:///:memory:'
+        return "sqlite:///:memory:"

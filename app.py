@@ -10,9 +10,15 @@ from errors import bp
 from v1 import v1_bp
 
 
-def create_app(config='config.DevelopmentConfig'):
-    if os.environ.get('DEBUG') == 'true':
-        pydevd.settrace('host.docker.internal', port=12345, stdoutToServer=True, stderrToServer=True, suspend=False)
+def create_app(config="config.DevelopmentConfig"):
+    if os.environ.get("DEBUG") == "true":
+        pydevd.settrace(
+            "host.docker.internal",
+            port=12345,
+            stdoutToServer=True,
+            stderrToServer=True,
+            suspend=False,
+        )
     app = Flask(__name__)
     cfg = import_string(config)()
     app.config.from_object(cfg)
