@@ -1,7 +1,19 @@
 [run]
 branch = True
 source = codecov
+
+[report]
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    if .debug:
+    raise NotImplementedError
+    if __name__ == .__main__.:
+fail_under = 90
+show_missing = True
+ignore_errors = True
 omit =
-    appserver.py
-    config.py
+    venv/*
+    tests/*
+    setup.py
 
