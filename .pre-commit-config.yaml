@@ -11,7 +11,14 @@ repos:
     rev: v0.902
     hooks:
       - id: mypy
-        exclude: ^tests/
+        exclude: |
+          (?x)^(tests/|
+          migrations/|
+          schemas/|
+          config.py|
+          app.py|
+          wsgi.py|
+          appserver.py|)$
         args: [ --strict ]
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
