@@ -11,7 +11,6 @@ from flask_jwt_extended import (
     get_jti,
 )
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash
 
 from core.extensions import db, jwt
@@ -20,6 +19,8 @@ from models import User
 from models.blocked_token import BlockedToken
 from schemas.internship import InternshipSchema
 from schemas.user import UserSchema
+from services.auth import AuthService
+from services.email import EmailService
 
 
 @jwt.token_in_blocklist_loader
@@ -41,12 +42,9 @@ class SignupResource(Resource):
     def post(cls):
         user_schema = UserSchema()
         user = user_schema.load(request.json)
-        try:
-            db.session.add(user)
-            db.session.commit()
-        except IntegrityError:
-            raise BaseError(key="DUPLICATE_USER")
-        return user_schema.dump(user)
+        email_service = EmailService(email=user.email)
+        auth_service = AuthService(email_service=email_service, db=db)
+        return user_schema.dump(auth_service.register(user))
 
 
 class LoginResource(Resource):

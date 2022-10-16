@@ -210,3 +210,7 @@ def test_create_internship(data, status_code, authenticated_client):
             data.get("title")
             == Internship.query.filter_by(title=data.get("title")).first().title
         )
+
+
+def test_email_verification_link_sent():
+    pass
