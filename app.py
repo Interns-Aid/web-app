@@ -5,7 +5,7 @@ from flask import Flask
 from werkzeug.utils import import_string
 
 from admin import admin
-from core.extensions import migrate, db, ma, jwt
+from core.extensions import migrate, db, ma, jwt, mail
 from errors import bp
 from v1 import v1_bp
 
@@ -22,6 +22,7 @@ def create_app(config="config.DevelopmentConfig"):
     app = Flask(__name__)
     cfg = import_string(config)()
     app.config.from_object(cfg)
+    mail.init_app(app)
     db.init_app(app)
     migrate.init_app(app, db)
     ma.init_app(app)

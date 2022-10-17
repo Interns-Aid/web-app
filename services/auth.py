@@ -2,6 +2,7 @@ from sqlalchemy.exc import IntegrityError
 
 from errors import BaseError
 from models import User
+from services.token import generate_verification_token
 
 
 class AuthService:
@@ -13,7 +14,8 @@ class AuthService:
         try:
             self.db.session.add(user)
             self.db.session.commit()
-            self.email_service.send()
+            token = generate_verification_token(user.email)
+            self.email_service.send(token, title="signup")
         except IntegrityError:
             raise BaseError(key="DUPLICATE_USER")
         return user

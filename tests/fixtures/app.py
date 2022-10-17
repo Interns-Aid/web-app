@@ -1,5 +1,4 @@
 import pytest
-from dotenv import load_dotenv
 
 from app import create_app
 from core.extensions import db
@@ -13,7 +12,6 @@ def app_ctx(app):
 
 @pytest.fixture
 def app():
-    load_dotenv(".env")
     app = create_app("config.TestingConfig")
     with app.app_context():
         db.create_all()
