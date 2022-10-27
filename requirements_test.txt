@@ -14,3 +14,4 @@ marshmallow-oneofschema
 coverage
 pytest-cov
 codecov
+Flask-Mail

@@ -20,3 +20,4 @@ class User(BaseModel):
     first_name = db.Column(db.String)
     last_name = db.Column(db.String)
     active = db.Column(db.Boolean, default=False)
+    # email_verified = db.Column(db.Boolean, default=False)

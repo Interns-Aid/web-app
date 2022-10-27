@@ -1,7 +1,7 @@
 from datetime import datetime
 from datetime import timezone
 
-from flask import request
+from flask import request, render_template
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -11,7 +11,6 @@ from flask_jwt_extended import (
     get_jti,
 )
 from flask_restful import Resource
-from sqlalchemy.exc import IntegrityError
 from werkzeug.security import check_password_hash
 
 from core.extensions import db, jwt
@@ -20,6 +19,7 @@ from models import User
 from models.blocked_token import BlockedToken
 from schemas.internship import InternshipSchema
 from schemas.user import UserSchema
+from services.auth import register, verify_email
 
 
 @jwt.token_in_blocklist_loader
@@ -41,12 +41,7 @@ class SignupResource(Resource):
     def post(cls):
         user_schema = UserSchema()
         user = user_schema.load(request.json)
-        try:
-            db.session.add(user)
-            db.session.commit()
-        except IntegrityError:
-            raise BaseError(key="DUPLICATE_USER")
-        return user_schema.dump(user)
+        return user_schema.dump(register(user))
 
 
 class LoginResource(Resource):
@@ -95,6 +90,13 @@ class LogoutResource(Resource):
 
         db.session.commit()
         return {"success": True}
+
+
+class EmailConfirmationResource(Resource):
+    @classmethod
+    def patch(cls):
+        verify_email(request.json.get("token"))
+        return render_template("email-confirmation.html")
 
 
 class UserProfile(Resource):

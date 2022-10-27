@@ -6,9 +6,12 @@ class Config(object):
     TESTING = False
     DB_SERVER = ""
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SESSION_TYPE = os.environ.get("SESSION_TYPE")
+    SESSION_TYPE = "memcached"
     PROPAGATE_EXCEPTIONS = True
     JWT_TOKEN_LOCATION = ["headers"]
+    SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
+    EMAIL_SENDER = os.environ.get("EMAIL_SENDER")
+    DOMAIN_URL = os.environ.get("DOMAIN_URL")
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
@@ -42,6 +45,11 @@ class DevelopmentConfig(Config):
 class TestingConfig(Config):
     DB_SERVER = "localhost"
     TESTING = True
+    JWT_SECRET_KEY = "secret"
+    SECRET_KEY = "secret"
+    SECURITY_PASSWORD_SALT = "salt"
+    EMAIL_SENDER = "test@gmail.com"
+    DOMAIN_URL = ""
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
