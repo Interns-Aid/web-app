@@ -1,7 +1,8 @@
 ### Interns Aid (Help)
 InternsAid was developed to collect internship questions asked by companies. The questions can be of home  and coding assignment type on the web platform. Anyone can add questions that have been asked.
 
-[![CI](https://github.com/Interns-Aid/web-app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Interns-Aid/web-app/actions/workflows/ci.yml) [![Deployment](https://github.com/Interns-Aid/web-app/actions/workflows/deploy.yml/badge.svg)](https://github.com/Interns-Aid/web-app/actions/workflows/deploy.yml) ![Codecov](https://img.shields.io/codecov/c/github/Interns-Aid/web-app) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![CI](https://github.com/Interns-Aid/web-app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Interns-Aid/web-app/actions/workflows/ci.yml) [![Deployment](https://github.com/Interns-Aid/web-app/actions/workflows/deploy.yml/badge.svg)](https://github.com/Interns-Aid/web-app/actions/workflows/deploy.yml) ![Codecov](https://img.shields.io/codecov/c/github/Interns-Aid/web-app) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 
 
 ### Prerequisite
