@@ -7,24 +7,23 @@ repos:
         exclude: |
           (?x)^(tests/conftest.py |
           )$
-#  - repo: https://github.com/pre-commit/mirrors-mypy
-#    rev: v0.902
-#    hooks:
-#      - id: mypy
-#        exclude: |
-#          (?x)^(tests/|
-#          migrations/|
-#          schemas/|
-#          config.py|
-#          app.py|
-#          wsgi.py|
-#          appserver.py|)$
-#        args: [ --strict ]
+  #  - repo: https://github.com/pre-commit/mirrors-mypy
+  #    rev: v0.902
+  #    hooks:
+  #      - id: mypy
+  #        exclude: |
+  #          (?x)^(tests/|
+  #          migrations/|
+  #          schemas/|
+  #          config.py|
+  #          app.py|
+  #          wsgi.py|
+  #          appserver.py|)$
+  #        args: [ --strict ]
   - repo: https://gitlab.com/pycqa/flake8
     rev: 3.9.2
     hooks:
       - id: flake8
         language_version: python3
         exclude: |
-          (?x)^(tests/conftest.py |
-          )$
+          ^tests

@@ -1,6 +1,7 @@
 import pytest
 
 from models import User, Internship
+from services.token import generate_verification_token
 
 
 @pytest.mark.parametrize(
@@ -212,5 +213,21 @@ def test_create_internship(data, status_code, authenticated_client):
         )
 
 
-def test_email_verification_link_sent():
-    pass
+def test_email_verification(client):
+    user_email = "inactive_user@mit.com"
+    token = generate_verification_token(user_email)
+    response = client.patch("api/v1/email-confirmation", json={"token": token})
+    assert response.status_code == 200
+
+
+def test_email_verification_should_return_error(client):
+    user_email = "inactive_user@mit.com"
+    token = generate_verification_token(user_email)
+    mangled_token = token + "test"
+    response = client.patch("api/v1/email-confirmation", json={"token": mangled_token})
+    assert response.status_code == 400
+    assert response.json == {
+        "code": 400,
+        "description": "Invalid Signature",
+        "name": "BAD_TOKEN_SIGNATURE",
+    }

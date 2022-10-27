@@ -1,5 +1,7 @@
 from flask import current_app as app
-from itsdangerous import URLSafeTimedSerializer, SignatureExpired
+from itsdangerous import URLSafeTimedSerializer, SignatureExpired, BadTimeSignature
+
+from errors import BaseError
 
 
 def generate_verification_token(key: str) -> str:
@@ -14,4 +16,6 @@ def decode_token(token, expiration=3600) -> str:
             token, salt=app.config.get("SECURITY_PASSWORD_SALT"), max_age=expiration
         )
     except SignatureExpired:
-        return ""
+        raise BaseError(key="EMAIL_VERIFICATION_TOKEN_EXPIRED")
+    except BadTimeSignature:
+        raise BaseError(key="BAD_TOKEN_SIGNATURE")

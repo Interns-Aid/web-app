@@ -8,6 +8,11 @@ APP_ERRORS = {
     "DUPLICATE_USER": ("User already exist with given username", 400),
     "INVALID_CREDENTIALS": ("Username/Password does not match", 401),
     "INACTIVE_USER": ("User has been disabled", 401),
+    "EMAIL_VERIFICATION_TOKEN_EXPIRED": (
+        "Email verification token has been expired",
+        401,
+    ),
+    "BAD_TOKEN_SIGNATURE": ("Invalid Signature", 400),
 }
 
 bp = Blueprint("errors", __name__)

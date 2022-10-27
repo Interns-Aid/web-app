@@ -10,6 +10,8 @@ class Config(object):
     PROPAGATE_EXCEPTIONS = True
     JWT_TOKEN_LOCATION = ["headers"]
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
+    EMAIL_SENDER = os.environ.get("EMAIL_SENDER")
+    DOMAIN_URL = os.environ.get("DOMAIN_URL")
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):
@@ -46,6 +48,8 @@ class TestingConfig(Config):
     JWT_SECRET_KEY = "secret"
     SECRET_KEY = "secret"
     SECURITY_PASSWORD_SALT = "salt"
+    EMAIL_SENDER = "test@gmail.com"
+    DOMAIN_URL = ""
 
     @property
     def SQLALCHEMY_DATABASE_URI(self):

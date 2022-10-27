@@ -4,7 +4,7 @@ from app import create_app
 from core.extensions import db
 
 
-@pytest.fixture
+@pytest.fixture(autouse=True)
 def app_ctx(app):
     with app.app_context():
         yield

@@ -1,21 +1,28 @@
 from sqlalchemy.exc import IntegrityError
 
+from core.extensions import db
 from errors import BaseError
 from models import User
-from services.token import generate_verification_token
+from services.email import send_verification_email
+from services.token import generate_verification_token, decode_token
 
 
-class AuthService:
-    def __init__(self, email_service, db):
-        self.email_service = email_service
-        self.db = db
+def register(user: User):
+    try:
+        db.session.add(user)
+        db.session.commit()
+        token = generate_verification_token(user.email)
+        send_verification_email(
+            token=token, email=user.email, first_name=user.first_name
+        )
+    except IntegrityError:
+        db.session.rollback()
+        raise BaseError(key="DUPLICATE_USER")
+    return user
 
-    def register(self, user: User):
-        try:
-            self.db.session.add(user)
-            self.db.session.commit()
-            token = generate_verification_token(user.email)
-            self.email_service.send(token, title="signup")
-        except IntegrityError:
-            raise BaseError(key="DUPLICATE_USER")
-        return user
+
+def verify_email(token):
+    if email := decode_token(token, expiration=86400):
+        user = User.query.filter(User.email == email).one()
+        user.active = True
+        db.session.commit()
