@@ -16,6 +16,7 @@ def test_register_should_send_verification_email(send_verification_email):
         "email": "test_user@email.com",
         "password": "ActiveUser@1234",
         "first_name": "Test User",
+        "last_name": "Last Name",
     }
     user_schema = UserSchema()
     user = user_schema.load(data)
@@ -29,6 +30,7 @@ def test_register_should_raise_exception_when_username_is_duplicate():
         "email": "active_user@email.com",
         "password": "ActiveUser@1234",
         "first_name": "Active User",
+        "last_name": "Last Name",
     }
     user_schema = UserSchema()
     user = user_schema.load(data)

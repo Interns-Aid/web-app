@@ -1,16 +1,16 @@
 """empty message
 
-Revision ID: 63794aa17780
-Revises: 52114297bef9
-Create Date: 2022-10-12 18:49:36.110499
+Revision ID: 6e40e2e602d0
+Revises: 
+Create Date: 2022-10-27 04:58:46.076233
 
 """
 import sqlalchemy as sa
 from alembic import op
 
 # revision identifiers, used by Alembic.
-revision = "63794aa17780"
-down_revision = "52114297bef9"
+revision = "6e40e2e602d0"
+down_revision = None
 branch_labels = None
 depends_on = None
 
@@ -32,6 +32,37 @@ def upgrade():
         sa.Column("website", sa.String(), nullable=False),
         sa.Column("location", sa.String(), nullable=False),
         sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_table(
+        "user",
+        sa.Column("id", sa.String(), nullable=False),
+        sa.Column("username", sa.String(), nullable=False),
+        sa.Column("email", sa.String(), nullable=False),
+        sa.Column("password", sa.String(), nullable=False),
+        sa.Column("first_name", sa.String(), nullable=False),
+        sa.Column("last_name", sa.String(), nullable=False),
+        sa.Column("active", sa.Boolean(), nullable=True),
+        sa.PrimaryKeyConstraint("id"),
+        sa.UniqueConstraint("email"),
+        sa.UniqueConstraint("username"),
+    )
+    op.create_table(
+        "blocked_token",
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("jti", sa.String(length=36), nullable=False),
+        sa.Column("type", sa.String(length=16), nullable=False),
+        sa.Column("user_id", sa.String(), nullable=False),
+        sa.Column(
+            "created_at", sa.DateTime(), server_default=sa.text("now()"), nullable=False
+        ),
+        sa.ForeignKeyConstraint(
+            ["user_id"],
+            ["user.id"],
+        ),
+        sa.PrimaryKeyConstraint("id"),
+    )
+    op.create_index(
+        op.f("ix_blocked_token_jti"), "blocked_token", ["jti"], unique=False
     )
     op.create_table(
         "coding",
@@ -115,6 +146,9 @@ def downgrade():
     op.drop_table("internship")
     op.drop_table("home")
     op.drop_table("coding")
+    op.drop_index(op.f("ix_blocked_token_jti"), table_name="blocked_token")
+    op.drop_table("blocked_token")
+    op.drop_table("user")
     op.drop_table("company")
     op.drop_table("assignment")
     # ### end Alembic commands ###

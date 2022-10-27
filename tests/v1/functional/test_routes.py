@@ -11,6 +11,8 @@ from services.token import generate_verification_token
             {
                 "username": "rajesh",
                 "email": "rajesh.k.khadka@gmail.com",
+                "first_name": "Rajesh",
+                "last_name": "Khadka",
                 "password": "pass",
             },
             400,
@@ -23,6 +25,8 @@ from services.token import generate_verification_token
         (
             {
                 "username": "active_user",
+                "first_name": "Active",
+                "last_name": "User",
                 "email": "active_user@mit.com",
                 "password": "Pass@1234",
             },
@@ -51,7 +55,15 @@ def test_create_user(client):
     email = "test_email@gmail.com"
     password = "Password@1234"
     test_username = "test_username"
-    data = {"username": test_username, "email": email, "password": password}
+    first_name = "first_name"
+    last_name = "last_name"
+    data = {
+        "username": test_username,
+        "email": email,
+        "password": password,
+        "first_name": first_name,
+        "last_name": last_name,
+    }
     response = client.post("/api/v1/signup", json=data)
     user = User.query.get(response.json.get("id"))
     assert user is not None
