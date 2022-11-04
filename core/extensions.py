@@ -1,3 +1,4 @@
+from flask_apispec import FlaskApiSpec
 from flask_jwt_extended import JWTManager
 from flask_mail import Mail
 from flask_marshmallow import Marshmallow
@@ -9,3 +10,4 @@ migrate = Migrate()
 ma = Marshmallow()
 jwt = JWTManager()
 mail = Mail()
+docs = FlaskApiSpec()

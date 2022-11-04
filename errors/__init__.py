@@ -1,7 +1,7 @@
 import json
 
 from flask import Blueprint
-from marshmallow import ValidationError
+from webargs.flaskparser import parser, abort
 from werkzeug.exceptions import HTTPException, InternalServerError
 
 APP_ERRORS = {
@@ -15,7 +15,7 @@ APP_ERRORS = {
     "BAD_TOKEN_SIGNATURE": ("Invalid Signature", 400),
 }
 
-bp = Blueprint("errors", __name__)
+error_bp = Blueprint("errors", __name__)
 
 
 class BaseError(Exception):
@@ -42,22 +42,17 @@ def parse_response(e):
     return response
 
 
-@bp.app_errorhandler(BaseError)
+@error_bp.app_errorhandler(BaseError)
 def handle_generic_exception(e):
     return e.to_json(), e.code
 
 
-@bp.app_errorhandler(ValidationError)
-def handle_validation_error(e):
-    return {"code": 400, "name": "BAD_REQUEST", "description": e.messages}, 400
-
-
-@bp.app_errorhandler(HTTPException)
+@error_bp.app_errorhandler(HTTPException)
 def handle_exception(e):
     return parse_response(e)
 
 
-@bp.app_errorhandler(InternalServerError)
+@error_bp.app_errorhandler(InternalServerError)
 def handle_500(e):
     response = e.get_response()
     response.data = json.dumps(
@@ -69,3 +64,16 @@ def handle_500(e):
     )
     response.content_type = "application/json"
     return response
+
+
+@parser.error_handler
+def handle_request_parsing_error(err, req, schema, *, error_status_code, error_headers):
+    """webargs error handler that uses Flask-RESTful's abort function to return
+    a JSON error response to the client.
+    """
+    error = {
+        "code": 400,
+        "name": "BAD_REQUEST",
+        "description": err.messages.get("json"),
+    }
+    abort(400, **error)

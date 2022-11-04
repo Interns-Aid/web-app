@@ -2,6 +2,7 @@ from datetime import datetime
 from datetime import timezone
 
 from flask import request, render_template
+from flask_apispec import MethodResource, marshal_with, use_kwargs, doc
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -13,10 +14,18 @@ from flask_jwt_extended import (
 from flask_restful import Resource
 from werkzeug.security import check_password_hash
 
+from core.decorators import doc_protected
 from core.extensions import db, jwt
 from errors import BaseError
 from models import User
 from models.blocked_token import BlockedToken
+from schemas.auth import (
+    TokenRefreshDumpSchema,
+    LogoutDumpSchema,
+    LogoutLoadSchema,
+    LoginDumpSchema,
+    EmailConfirmationLoadSchema,
+)
 from schemas.internship import InternshipSchema
 from schemas.user import UserSchema
 from services.auth import register, verify_email
@@ -36,19 +45,19 @@ def user_lookup(jwt_header, jwt_payload: dict):
     return user
 
 
-class SignupResource(Resource):
-    @classmethod
-    def post(cls):
-        user_schema = UserSchema()
-        user = user_schema.load(request.json)
-        return user_schema.dump(register(user))
+@doc(description="Signup", tags=["Auth"])
+class SignupResource(MethodResource):
+    @marshal_with(UserSchema)
+    @use_kwargs(UserSchema())
+    def post(self, user):
+        return register(user)
 
 
-class LoginResource(Resource):
-    @classmethod
-    def post(cls):
-        user_schema = UserSchema(only=("username", "password"))
-        user = user_schema.load(request.json)
+@doc(description="Login", tags=["Auth"])
+class LoginResource(MethodResource):
+    @marshal_with(LoginDumpSchema)
+    @use_kwargs(UserSchema(only=("username", "password")))
+    def post(self, user):
         db_user = User.query.filter_by(username=user.username).one_or_none()
         if not db_user or not check_password_hash(
             db_user.password, request.json.get("password")
@@ -63,11 +72,13 @@ class LoginResource(Resource):
         return {
             "access_token": access_token,
             "refresh_token": refresh_token,
-            **UserSchema().dump(db_user),
+            "user": db_user,
         }
 
 
-class TokenRefreshResource(Resource):
+@doc_protected(description="Refresh Token", tags=["Auth"], refresh=True)
+class TokenRefreshResource(MethodResource):
+    @marshal_with(TokenRefreshDumpSchema)
     @jwt_required(refresh=True)
     def post(self):
         identity = get_jwt_identity()
@@ -75,16 +86,19 @@ class TokenRefreshResource(Resource):
         return {"access_token": access_token}
 
 
-class LogoutResource(Resource):
+@doc_protected(description="Logout", tags=["Auth"])
+class LogoutResource(MethodResource):
+    @marshal_with(LogoutDumpSchema)
+    @use_kwargs(LogoutLoadSchema)
     @jwt_required(verify_type=False)
-    def post(self):
+    def post(self, **kwargs):
         access_token = get_jwt()
         jti = access_token["jti"]
         token_type = access_token["type"]
         now = datetime.now(timezone.utc)
         db.session.add(BlockedToken(jti=jti, type=token_type, created_at=now))
 
-        refresh_token = request.json.get("refresh_token")
+        refresh_token = kwargs.get("refresh_token")
         jti = get_jti(refresh_token)
         db.session.add(BlockedToken(jti=jti, type="refresh", created_at=now))
 
@@ -92,27 +106,37 @@ class LogoutResource(Resource):
         return {"success": True}
 
 
-class EmailConfirmationResource(Resource):
-    @classmethod
-    def patch(cls):
-        verify_email(request.json.get("token"))
+@doc(description="Email Verification", tags=["Auth"])
+class EmailConfirmationResource(MethodResource):
+    @use_kwargs(EmailConfirmationLoadSchema)
+    def patch(self, **kwargs):
+        verify_email(kwargs.get("token"))
         return render_template("email-confirmation.html")
 
 
-class UserProfile(Resource):
+@doc_protected(description="Get User Profile", tags=["Profile"])
+class UserProfile(MethodResource):
+    @marshal_with(UserSchema())
     @jwt_required()
-    def get(self):
-        user = User.query.filter_by(username=get_jwt_identity()).first()
-        user_schema = UserSchema()
-        return user_schema.dump(user)
+    def get(self, user_id):
+        user = User.query.get_or_404(user_id)
+        return user
 
+    @marshal_with(UserSchema)
+    @use_kwargs(
+        UserSchema(
+            only=("first_name", "last_name", "password", "email"),
+            partial=True,
+            load_instance=False,
+        )
+    )
     @jwt_required()
-    def put(self):
-        user = User.query.get(request.json.get("id"))
-        user_schema = UserSchema(only=("first_name", "last_name", "password", "email"))
-        user_schema.load(request.json, instance=user, partial=True)
+    def put(self, user_id, **kwargs):
+        user = User.query.get_or_404(user_id)
+        for key, value in kwargs.items():
+            setattr(user, key, value)
         db.session.commit()
-        return user_schema.dump(user)
+        return user
 
 
 class InternshipResource(Resource):
