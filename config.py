@@ -8,6 +8,7 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SESSION_TYPE = "memcached"
     PROPAGATE_EXCEPTIONS = True
+    JSON_SORT_KEYS = False
     JWT_TOKEN_LOCATION = ["headers"]
     SECURITY_PASSWORD_SALT = os.environ.get("SECURITY_PASSWORD_SALT")
     EMAIL_SENDER = os.environ.get("EMAIL_SENDER")
@@ -20,6 +21,14 @@ class Config(object):
     @property
     def JWT_SECRET_KEY(self):
         return os.environ.get("JWT_SECRET_KEY")
+
+    @property
+    def EMAIL_SENDER(self):
+        return os.environ.get("EMAIL_SENDER")
+
+    @property
+    def DOMAIN_URL(self):
+        return os.environ.get("DOMAIN_URL")
 
     @property
     def SECRET_KEY(self):

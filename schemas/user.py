@@ -1,6 +1,6 @@
 import re
 
-from marshmallow import validates, post_load, fields, ValidationError, EXCLUDE
+from marshmallow import validates, post_load, fields, EXCLUDE, ValidationError
 from marshmallow_sqlalchemy import SQLAlchemyAutoSchema
 from werkzeug.security import generate_password_hash
 
@@ -17,7 +17,6 @@ class UserSchema(SQLAlchemyAutoSchema):
         exclude = ("active",)
         load_only = ("password",)
         dump_only = ("id",)
-        unknown = EXCLUDE
 
     @validates("password")
     def validate_password(self, value):
