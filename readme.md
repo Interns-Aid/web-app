@@ -2,7 +2,7 @@
 [![CI](https://github.com/Interns-Aid/web-app/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/Interns-Aid/web-app/actions/workflows/ci.yml) [![Deployment](https://github.com/Interns-Aid/web-app/actions/workflows/deploy.yml/badge.svg)](https://github.com/Interns-Aid/web-app/actions/workflows/deploy.yml) ![Codecov](https://img.shields.io/codecov/c/github/Interns-Aid/web-app) [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://github.com/Interns-Aid/web-app/blob/4cca3c0e9a1fa921710f0aa0c9536191b96cbacd/LICENSE.md)
 #### Internsaid = Intern's + AID (Help)
 
-Interns Aid is for interns to prepare for a technical internship. An internship is the first step towards a career in the technical field. Most students leave the internship early because it is difficult to pass the technical tests required by the companies. It is stressful when you have no idea what to work on.
+Interns AID is for interns preparing for a technical internship. An internship is the first step to a career in the software development. Most students quit early because it is difficult to pass the technical tests required by companies. As a beginner, it's stressful when you have no idea what to work on.
 
 It is built to collect internship questions asked by companies. The questions can be homework or coding assignment type on the web platform. Anyone can add questions that have been asked.
 
